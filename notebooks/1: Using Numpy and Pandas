@@ -1,0 +1,281 @@
+## Lesson 1. Intro to Pandas Dataframes--------------------------------------------------------------------
+## Authors: Jenny Palomino, Leah Wasser
+
+import matplotlib.pyplot as plt
+# Import pandas with alias pd
+import pandas as pd
+
+# Average monthly precip for Boulder, CO
+avg_monthly_precip = pd.DataFrame(columns=["month", "precip_in"],
+                                  data=[
+                                       ["Jan", 0.70],  ["Feb", 0.75],
+                                       ["Mar", 1.85],  ["Apr", 2.93],
+                                       ["May", 3.05],  ["June", 2.02],
+                                       ["July", 1.93], ["Aug", 1.62],
+                                       ["Sept", 1.84], ["Oct", 1.31],
+                                       ["Nov", 1.39],  ["Dec", 0.84]
+])
+
+# Notice the nicely formatted output without use of print
+avg_monthly_precip
+
+f, ax = plt.subplots()
+avg_monthly_precip.plot(x="month",
+                        y="precip_in",
+                        title="Plot of Pandas Data Frame using Pandas .plot",
+                        ax=ax)
+plt.show()
+
+f, ax = plt.subplots()
+ax.plot(avg_monthly_precip.month,
+        avg_monthly_precip.precip_in)
+
+ax.set(title="Plot of Pandas Data Frame using Pandas .plot")
+plt.show()
+
+##Lesson 2. Import CSV Files Into Pandas Dataframes--------------------------------------------------------------
+# Import packages
+import os
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import earthpy as et
+
+# URL for .csv with avg monthly precip data
+avg_monthly_precip_url = "https://ndownloader.figshare.com/files/12710618"
+
+# Download file from URL
+et.data.get_data(url=avg_monthly_precip_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME, 
+                      "earth-analytics", 
+                      "data"))
+
+# Import data from .csv file
+fname = os.path.join("earthpy-downloads",
+                     "avg-precip-months-seasons.csv")
+
+avg_monthly_precip = pd.read_csv(fname)
+
+avg_monthly_precip
+
+ax.bar(x=avg_monthly_precip.column,
+       height=avg_monthly_precip.column)
+
+##Lesson 3. Run Calculations and Summary Statistics on Pandas Dataframes-------------------------------------------------
+
+# Import packages
+import os
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import earthpy as et
+
+# URL for .csv with avg monthly precip data
+avg_monthly_precip_url = "https://ndownloader.figshare.com/files/12710618"
+
+# Download file
+et.data.get_data(url=avg_monthly_precip_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME,
+                      "earth-analytics",
+                      "data"))
+
+# Import data from .csv file
+fname = os.path.join("earthpy-downloads",
+                     "avg-precip-months-seasons.csv")
+
+avg_monthly_precip = pd.read_csv(fname)
+
+avg_monthly_precip
+
+# See first 5 rows
+avg_monthly_precip.head()
+
+# See last 5 rows
+avg_monthly_precip.tail()
+
+# Information about the dataframe
+avg_monthly_precip.info()
+
+# Get column names
+avg_monthly_precip.columns
+
+# Number of rows and columns
+avg_monthly_precip.shape
+
+# Summary stats of all numeric columns
+avg_monthly_precip.describe()
+
+# Median of all numeric columns
+avg_monthly_precip.median()
+
+# Summary stats on precip column as dataframe
+avg_monthly_precip[["precip"]].describe()
+
+# Summary stats on precip column as series
+avg_monthly_precip["precip"].describe()
+
+# Sort in descending order for precip
+avg_monthly_precip.sort_values(by="precip",
+                               ascending=False)
+
+# Convert values from inches to millimeters
+avg_monthly_precip["precip"] *= 25.4
+
+avg_monthly_precip
+
+# Create new column with precip in the original units (inches)
+avg_monthly_precip["precip_in"] = avg_monthly_precip["precip"] / 25.4
+
+avg_monthly_precip
+
+# Plot the data
+f, ax = plt.subplots()
+
+ax.bar(x=avg_monthly_precip.months,
+       height=avg_monthly_precip.precip,
+       color="purple")
+
+ax.set(title="Plot of Average Monthly Precipitation in mm")
+plt.show()
+
+# Group data by seasons and summarize precip
+precip_by_season=avg_monthly_precip.groupby(["seasons"])[["precip"]].describe()
+precip_by_season
+
+precip_by_season.columns
+
+# Drop a level so there is only one index
+precip_by_season.columns = precip_by_season.columns.droplevel(0)
+precip_by_season
+
+# Plot the data
+f, ax = plt.subplots()
+
+ax.bar(precip_by_season.index,
+        precip_by_season["mean"],
+        color="purple")
+
+ax.set(title="Bar Plot of Seasonal Monthly Precipitation in mm")
+plt.show()
+
+# Save median of precip for each season to dataframe
+avg_monthly_precip_median = avg_monthly_precip.groupby(
+    ["seasons"])[["precip"]].median()
+
+avg_monthly_precip_median
+
+avg_monthly_precip_median.info()
+
+# Save to new dataframe with original index
+avg_monthly_precip_median = avg_monthly_precip.groupby(
+    ["seasons"], as_index=False)[["precip"]].median()
+
+avg_monthly_precip_median
+
+# Save summary stats of precip for each season to dataframe
+avg_monthly_precip_stats = avg_monthly_precip.groupby(
+    ["seasons"])[["precip"]].describe()
+
+avg_monthly_precip_stats
+
+# Reset index
+avg_monthly_precip_stats.reset_index(inplace=True)
+
+avg_monthly_precip_stats
+
+##Lesson 4. Select Data From Pandas Dataframes-------------------------------------------------------------------------
+
+# Import packages
+import os
+
+import pandas as pd
+import earthpy as et
+
+# URL for .csv with avg monthly precip data
+avg_monthly_precip_url = "https://ndownloader.figshare.com/files/12710618"
+
+# Download file
+et.data.get_data(url=avg_monthly_precip_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME, "earth-analytics"))
+
+# Import data from .csv file
+fname = os.path.join("data", "earthpy-downloads", 
+                     "avg-precip-months-seasons.csv")
+
+avg_monthly_precip = pd.read_csv(fname)
+
+avg_monthly_precip
+
+# Select first row and first column
+avg_monthly_precip.iloc[0:1, 0:1]
+
+# Select first two rows and first column
+avg_monthly_precip.iloc[0:2, 0:1]
+
+# Select first row and first two columns
+avg_monthly_precip.iloc[0:1, 0:2]
+
+# Select first row with all columns
+avg_monthly_precip.iloc[0:1, :]
+
+# Select first column with all rows
+avg_monthly_precip.iloc[:, 0:1]
+
+# Create new dataframe with `months` as index
+avg_monthly_precip_index = avg_monthly_precip.set_index("months")
+
+avg_monthly_precip_index
+
+# Select Aug using months index 
+avg_monthly_precip_index.loc[["Aug"]]
+
+# Select the `months` column as series
+avg_monthly_precip["months"]
+
+# Select the `months` column as dataframe
+avg_monthly_precip[["months"]]
+
+# Save months and seasons to new dataframe
+avg_monthly_precip_text = avg_monthly_precip[['months', 'seasons']]
+
+avg_monthly_precip_text
+
+# Select rows with Summer in seasons
+avg_monthly_precip[avg_monthly_precip["seasons"] == "Summer"]
+
+# Select rows with Jan in months
+jan_avg_precip = avg_monthly_precip[avg_monthly_precip["months"] == "Jan"]
+
+jan_avg_precip
+
+# Select rows equal to 1.62 in precip
+avg_monthly_precip[avg_monthly_precip["precip"] == 1.62]
+
+# Save rows with values greater than 2.0 to new dataframe
+gt2_avg_monthly_precip = avg_monthly_precip[avg_monthly_precip["precip"] > 2.0]
+
+gt2_avg_monthly_precip
+
+## Practice Your Skills------------------------------------------------------------
+
+precip-2002-2013-months-seasons.csv which is available for download at 
+
+precip_2002-2013_url = “https://ndownloader.figshare.com/files/12710621”.
+
+# Download file
+et.data.get_data(url=precip_2002-2013_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME, "earth-analytics"))
+
+# Import data from .csv file
+fname = os.path.join("data", "earthpy-downloads", 
+                     "precip-2002-2013-months-seasons.csv")
+
+.describe(precip_2002_2013)
