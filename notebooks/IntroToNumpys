@@ -1,0 +1,278 @@
+##Authors: Jenny Palomino, Leah Wasser
+##Source: https://www.earthdatascience.org/courses/intro-to-earth-data-science/scientific-data-structures-python/numpy-arrays/
+
+##Lesson 1. Intro to Numpy Arrays
+##Student Name: Andrea Perez
+
+# Import numpy with alias np
+import numpy as np
+
+# Monthly avg precip for Jan through Mar in Boulder, CO
+avg_monthly_precip = np.array([0.70, 0.75, 1.85])
+
+print(avg_monthly_precip)
+
+# Monthly precip for Jan through Mar in 2002 and 2013
+precip_2002_2013 = np.array([
+    [1.07, 0.44, 1.50],
+    [0.27, 1.13, 1.72]
+])
+
+print(precip_2002_2013)
+
+##Lesson 2. Import Text Files Into Numpy Arrays-------------------------------------------------
+
+# Import necessary packages
+import os
+
+import numpy as np
+import earthpy as et
+
+# Define variable for URL to .txt with avg monthly precip data
+monthly_precip_url = 'https://ndownloader.figshare.com/files/12565616'
+
+# Provide variable as parameter value for `url`
+et.data.get_data(url=monthly_precip_url)
+
+# Download data from URL to .txt with month names
+month_names_url = 'https://ndownloader.figshare.com/files/12565619'
+et.data.get_data(url=month_names_url)
+
+# Download data from URL to .csv of precip data for 2002 and 2013
+precip_2002_2013_url = 'https://ndownloader.figshare.com/files/12707792'
+et.data.get_data(url=precip_2002_2013_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME, 'earth-analytics'))
+
+# Define path to file using os.path.join
+fname = os.path.join("data", "earthpy-downloads",
+                     "avg-monthly-precip.txt")
+
+# Import average monthly precip to numpy array
+avg_monthly_precip = np.loadtxt(fname)
+
+print(avg_monthly_precip)
+
+# Check type
+type(avg_monthly_precip)
+
+# Import monthly precip for 2002 and 2013 to numpy array
+fname = os.path.join("data", "earthpy-downloads",
+                     "monthly-precip-2002-2013.csv")
+precip_2002_2013 = np.loadtxt(fname, delimiter=",")
+
+# Check type
+type(precip_2002_2013)
+
+print(precip_2002_2013)
+
+# Import month names
+fname = os.path.join("data", "earthpy-downloads", "months.txt")
+months = np.genfromtxt(fname, dtype='str')
+
+type(months)
+
+print(months)
+
+##Lesson 3. Run Calculations and Summary Statistics on Numpy Arrays---------------------------------------------------
+
+# Import necessary packages
+import os
+import numpy as np
+import earthpy as et
+
+# Download .txt with avg monthly precip (inches)
+monthly_precip_url = 'https://ndownloader.figshare.com/files/12565616'
+et.data.get_data(url=monthly_precip_url)
+
+# Download .csv of precip data for 2002 and 2013 (inches)
+precip_2002_2013_url = 'https://ndownloader.figshare.com/files/12707792'
+et.data.get_data(url=precip_2002_2013_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME, 'earth-analytics'))
+
+# Import average monthly precip to numpy array
+fname = os.path.join("data", "earthpy-downloads",
+                     "avg-monthly-precip.txt")
+
+avg_monthly_precip = np.loadtxt(fname)
+
+print(avg_monthly_precip)
+
+# Import monthly precip for 2002 and 2013 to numpy array
+fname = os.path.join("data", "earthpy-downloads",
+                     "monthly-precip-2002-2013.csv")
+
+precip_2002_2013 = np.loadtxt(fname, delimiter = ",")
+
+print(precip_2002_2013)
+
+# Check dimensions of avg_monthly_precip
+avg_monthly_precip.ndim
+
+# Check dimensions of precip_2002_2013
+precip_2002_2013.ndim
+
+# Check shape of precip_2002_2013
+precip_2002_2013.shape
+
+# Check shape of avg_monthly_precip
+avg_monthly_precip.shape
+
+# Check the original values
+print(avg_monthly_precip)
+
+# Use assignment operator to convert values from in to mm
+avg_monthly_precip *= 25.4
+
+# Print new values
+print(avg_monthly_precip)
+
+# Check the original values
+print(precip_2002_2013)
+
+# Use assignment operator to convert values from in to mm
+precip_2002_2013 *= 25.4
+
+# Print new values
+print(precip_2002_2013)
+
+##Test: Revisit Python Lists Versus Numpy Arrays
+
+precip_list = [0.70, 0.75, 1.85, 2.93, 3.05, 2.02, 
+              1.93, 1.62, 1.84, 1.31, 1.39, 0.84]
+
+precip_list *=  25.4
+
+##Run Summary Statistics on One-dimensional Numpy Arrays
+
+# Create variable with mean value
+mean_avg_precip = np.mean(avg_monthly_precip)
+
+print("mean average monthly precipitation:", mean_avg_precip)
+
+# Create variable with median value
+median_avg_precip = np.median(avg_monthly_precip)
+
+print("median average monthly precipitation:", median_avg_precip)
+
+# Calculate and print minimum and maximum values
+print("minimum average monthly precipitation:", np.min(avg_monthly_precip))
+print("maximum average monthly precipitation:", np.max(avg_monthly_precip))
+
+# Visually identify max value across the rows of precip_2002_2013
+print(precip_2002_2013)
+
+# Maximum value for each month across years 2002 and 2013
+print(np.max(precip_2002_2013, axis=0))
+
+# Create new array of the maximum value for each month
+precip_2002_2013_monthly_max = np.max(precip_2002_2013, axis=0)
+
+type(precip_2002_2013_monthly_max)
+
+# Visually identify max value across the rows of precip_2002_2013
+print(precip_2002_2013)
+
+# Maximum value for each year 2002 and 2013
+print(np.max(precip_2002_2013, axis=1))
+
+##Lesson 4. Slice (or Select) Data From Numpy Arrays-----------------------------------------------------------------
+
+# Import necessary packages
+import os
+
+import numpy as np
+import earthpy as et
+
+# Download .txt with avg monthly precip (inches)
+monthly_precip_url = 'https://ndownloader.figshare.com/files/12565616'
+et.data.get_data(url=monthly_precip_url)
+
+# Download .csv of precip data for 2002 and 2013 (inches)
+precip_2002_2013_url = 'https://ndownloader.figshare.com/files/12707792'
+et.data.get_data(url=precip_2002_2013_url)
+
+# Set working directory to earth-analytics
+os.chdir(os.path.join(et.io.HOME, 'earth-analytics'))
+
+# Import average monthly precip
+fname = os.path.join("data", "earthpy-downloads",
+                     "avg-monthly-precip.txt")
+
+avg_monthly_precip = np.loadtxt(fname)
+
+print(avg_monthly_precip)
+
+# Import monthly precip for 2002 and 2013
+fname = os.path.join("data", "earthpy-downloads",
+                     "monthly-precip-2002-2013.csv")
+
+precip_2002_2013 = np.loadtxt(fname, delimiter=",")
+
+print(precip_2002_2013)
+
+# Check shape
+avg_monthly_precip.shape
+
+# Select the last element of 12 elements
+avg_monthly_precip[11]
+
+# Select the last element of the array
+avg_monthly_precip[-1]
+
+# Slice range from 3rd to 5th elements
+print(avg_monthly_precip[2:5])
+
+# Check shape
+precip_2002_2013.shape
+
+# Select element in 2nd row, 3rd column
+precip_2002_2013[1, 2]
+
+# Select element in 2nd row, 12th column
+precip_2002_2013[1, 11]
+
+# Select element in last row, last column
+precip_2002_2013[-1, -1]
+
+# Slice first row, first two columns
+print(precip_2002_2013[0:1, 0:2])
+
+# Slice first two rows, first column
+print(precip_2002_2013[0:2, 0:1])
+
+# Slice 2nd row, 2nd and 3rd columns
+print(precip_2002_2013[1:2, 1:3])
+
+# Slice first two rows, first two columns
+print(precip_2002_2013[:2, :2])
+
+precip_2002_2013[:2, :2].shape
+
+# Select 1st column
+print(precip_2002_2013[:, 0])
+
+# Select 1st row
+print(precip_2002_2013[0, :])
+
+# Select 1st row of data for 2002
+precip_2002 = precip_2002_2013[0, :]
+
+print(precip_2002.shape)
+print(precip_2002)
+
+# Select 2nd row of data for 2013
+precip_2013 = precip_2002_2013[1]
+
+print(precip_2013.shape)
+print(precip_2013)
+
+
+
+
+
+
+
